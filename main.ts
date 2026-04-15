@@ -2,6 +2,17 @@ import { Hono } from 'hono'
 
 const app = new Hono()
 
+app.get('/test-pure', async (c) => {
+  const reqUrl = 'http://fire-emblem-matome.com/';
+  try {
+    const res = await fetch(reqUrl, { redirect: 'manual' });
+    const text = await res.text();
+    return c.text(`Status: ${res.status}\nURL: ${res.url}\n${text.substring(0, 500)}`);
+  } catch (e: any) {
+    return c.text(`Error: ${e.message}`);
+  }
+})
+
 app.get('/test-httpbin', async (c) => {
   const proxyTarget = 'http://httpbin.org/headers'
   const newHeaders = new Headers(c.req.raw.headers)
