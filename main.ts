@@ -2,14 +2,12 @@ import { Hono } from 'hono'
 
 const app = new Hono()
 
-app.get('/test-pure', async (c) => {
-  const reqUrl = 'http://fire-emblem-matome.com/';
+app.get('/test-dns', async (c) => {
   try {
-    const res = await fetch(reqUrl, { redirect: 'manual' });
-    const text = await res.text();
-    return c.text(`Status: ${res.status}\nURL: ${res.url}\n${text.substring(0, 500)}`);
+    const dnsRecords = await Deno.resolveDns("fire-emblem-matome.com", "A");
+    return c.json(dnsRecords);
   } catch (e: any) {
-    return c.text(`Error: ${e.message}`);
+    return c.text(`DNS Error: ${e.message}`);
   }
 })
 
