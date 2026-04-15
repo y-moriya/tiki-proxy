@@ -20,6 +20,8 @@ app.all('*', async (c) => {
   newHeaders.delete('x-forwarded-server')
   newHeaders.delete('x-real-ip')
   newHeaders.set('host', target.hostname)
+  newHeaders.set('x-forwarded-host', target.hostname)
+  newHeaders.set('x-forwarded-server', target.hostname)
 
   const newRequest = new Request(reqUrl, {
     method: c.req.raw.method,
