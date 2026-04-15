@@ -2,36 +2,6 @@ import { Hono } from 'hono'
 
 const app = new Hono()
 
-app.get('/test-dns', async (c) => {
-  try {
-    const dnsRecords = await Deno.resolveDns("fire-emblem-matome.com", "A");
-    return c.json(dnsRecords);
-  } catch (e: any) {
-    return c.text(`DNS Error: ${e.message}`);
-  }
-})
-
-app.get('/test-httpbin', async (c) => {
-  const proxyTarget = 'http://httpbin.org/headers'
-  const newHeaders = new Headers(c.req.raw.headers)
-  newHeaders.delete('host')
-  newHeaders.delete('x-forwarded-host')
-  newHeaders.delete('x-forwarded-for')
-  newHeaders.delete('x-forwarded-proto')
-  newHeaders.delete('x-forwarded-server')
-  newHeaders.delete('x-real-ip')
-  newHeaders.set('host', 'httpbin.org')
-  newHeaders.set('x-forwarded-host', 'httpbin.org')
-  newHeaders.set('x-forwarded-server', 'httpbin.org')
-
-  try {
-    const res = await fetch(proxyTarget, { headers: newHeaders });
-    return c.text(await res.text());
-  } catch (e: any) {
-    return c.text("Error: " + e.message);
-  }
-})
-
 app.all('*', async (c) => {
   const reqUrl = new URL(c.req.url)
   const proxyOrigin = reqUrl.origin
