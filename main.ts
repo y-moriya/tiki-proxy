@@ -2,37 +2,6 @@ import { Hono } from 'hono'
 
 const app = new Hono()
 
-app.get('/test-proxy', async (c) => {
-  const proxyTarget = 'http://fire-emblem-matome.com/'
-  try {
-    const res = await fetch(proxyTarget);
-    const text = await res.text();
-    return c.text(res.status + " " + text.substring(0, 100));
-  } catch (e: any) {
-    return c.text("Error: " + e.message);
-  }
-})
-
-app.get('/test-proxy-headers', async (c) => {
-  const proxyTarget = 'http://fire-emblem-matome.com/'
-  const newHeaders = new Headers(c.req.raw.headers)
-  newHeaders.delete('host')
-  newHeaders.delete('x-forwarded-host')
-  newHeaders.delete('x-forwarded-for')
-  newHeaders.delete('x-forwarded-proto')
-  newHeaders.delete('x-forwarded-server')
-  newHeaders.delete('x-real-ip')
-  newHeaders.set('host', 'fire-emblem-matome.com')
-
-  try {
-    const res = await fetch(proxyTarget, { headers: newHeaders });
-    const text = await res.text();
-    return c.text(res.status + " " + text.substring(0, 100));
-  } catch (e: any) {
-    return c.text("Error: " + e.message);
-  }
-})
-
 app.all('*', async (c) => {
   const reqUrl = new URL(c.req.url)
   const proxyOrigin = reqUrl.origin
