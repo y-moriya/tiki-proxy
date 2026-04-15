@@ -1,0 +1,31 @@
+{
+  "name": "tiki-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/y-moriya/tiki-proxy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/y-moriya/tiki-proxy/issues"
+  },
+  "homepage": "https://github.com/y-moriya/tiki-proxy#readme",
+  "dependencies": {
+    "hono": "^4.12.12"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260415.1",
+    "typescript": "^6.0.2",
+    "wrangler": "^4.82.2"
+  }
+}
