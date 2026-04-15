@@ -12,8 +12,20 @@ app.all('*', async (c) => {
   reqUrl.hostname = target.hostname
   reqUrl.port = target.port
 
-  const newRequest = new Request(reqUrl, c.req.raw)
-  newRequest.headers.set('Host', target.hostname)
+  const newHeaders = new Headers(c.req.raw.headers)
+  newHeaders.delete('host')
+  newHeaders.delete('x-forwarded-host')
+  newHeaders.delete('x-forwarded-for')
+  newHeaders.delete('x-forwarded-proto')
+  newHeaders.delete('x-forwarded-server')
+  newHeaders.delete('x-real-ip')
+  newHeaders.set('host', target.hostname)
+
+  const newRequest = new Request(reqUrl, {
+    method: c.req.raw.method,
+    headers: newHeaders,
+    body: ['GET', 'HEAD'].includes(c.req.raw.method) ? undefined : c.req.raw.body,
+  })
 
   try {
     const response = await fetch(newRequest)
